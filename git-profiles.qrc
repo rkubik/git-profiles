@@ -2,5 +2,6 @@
 <RCC version="1.0">
     <qresource prefix="/">
        <file>resources/icons/person.svg</file>
+       <file>resources/icons/select.svg</file>
     </qresource>
 </RCC>

@@ -9,36 +9,26 @@
 
 #include "window.h"
 
-Window::Window() : windowTitle("Git Profiles")
+Window::Window()
 {
-    createProfileGroupBox();
-    createSettingsGroupBox();
-
     createActions();
+    createTrayMenu();
+    createProfiles();
     createTrayIcon();
 
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-    connect(profileComboBox, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(setProfile(int)));
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(profileGroupBox);
-    mainLayout->addWidget(settingsGroupBox);
-    setLayout(mainLayout);
+    connect(trayIconMenu, SIGNAL(triggered(QAction*)),
+            this, SLOT(actionSelected(QAction*)));
+
+    setProfile(0);
 
     trayIcon->show();
-
-    //setWindowFlags(windowFlags() | ~Qt::WindowMaximizeButtonHint);
-    loadProfiles();
-
-    setWindowTitle(windowTitle);
-    resize(400, 300);
 }
 
-void Window::setVisible(bool visible)
+Window::~Window()
 {
-    QDialog::setVisible(visible);
 }
 
 void Window::closeEvent(QCloseEvent *event)
@@ -49,7 +39,7 @@ void Window::closeEvent(QCloseEvent *event)
     }
 }
 
-void Window::loadProfiles()
+void Window::createProfiles()
 {
     const QString config = QDir::homePath() + QDir::separator() +
         ".git-profiles";
@@ -57,6 +47,7 @@ void Window::loadProfiles()
     qDebug() << "Reading configuration from: " << config;
 
     QSettings settings(config, QSettings::IniFormat);
+    QIcon icon(":/resources/icons/select.svg");
 
     foreach (const QString &profileName, settings.childGroups()) {
         Profile profile(profileName);
@@ -67,22 +58,41 @@ void Window::loadProfiles()
         }
         settings.endGroup();
 
-        profiles.push_back(profile);
+        QAction *action = new QAction(tr("&Quit"), this);
+        action->setIcon(icon);
+        action->setText(profileName);
+        action->setData(profiles.size());
 
-        profileComboBox->addItem(profileName);
+        trayIconMenu->addAction(action);
+        profiles.push_back(profile);
+        profileActions.push_back(action);
     }
+}
+
+void Window::clearProfileIcon()
+{
+    foreach (QAction *profileAction, profileActions)
+        profileAction->setIconVisibleInMenu(false);
+}
+
+void Window::actionSelected(QAction *action)
+{
+    if (action->data().isNull())
+        return;
+
+    setProfile(action->data().toInt());
 }
 
 void Window::setProfile(int index)
 {
-    if (index < 0 || (unsigned int) index >= profiles.size())
+    if (index < 0 || index >= profiles.size())
         return;
+
+    qDebug() << "Selecting profile: " << profiles[index].name;
 
     QProcess process;
 
     foreach (const QString &profileSetting, profiles[index].settings.keys()) {
-        qDebug() << "Setting: " << profileSetting << " => " << profiles[index].settings[profileSetting];
-
         process.start("git", QStringList()
             << "config"
             << "--global"
@@ -90,13 +100,12 @@ void Window::setProfile(int index)
             << profiles[index].settings[profileSetting]);
 
         if (!process.waitForFinished())
-            qDebug() << "Failed to set: " << profileSetting;
+            qDebug() << "Failed setting: " << profileSetting;
     }
 
-    const QString profileLabel = "Profile: " + profiles[index].name;
-
-    trayIcon->setToolTip(profileLabel);
-    restoreAction->setText(profileLabel);
+    clearProfileIcon();
+    profileActions[index]->setIconVisibleInMenu(true);
+    trayIcon->setToolTip(profiles[index].name);
 }
 
 void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -105,48 +114,24 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
         case QSystemTrayIcon::Trigger:
         case QSystemTrayIcon::DoubleClick:
         case QSystemTrayIcon::MiddleClick:
-            showNormal();
-            break;
         default:
             break;
     }
 }
 
-void Window::createProfileGroupBox()
-{
-    profileGroupBox = new QGroupBox(tr("Current Profile"));
-
-    profileComboBox = new QComboBox;
-
-    QHBoxLayout *profileLayout = new QHBoxLayout;
-
-    profileLayout->addWidget(profileComboBox);
-
-    profileGroupBox->setLayout(profileLayout);
-}
-
-void Window::createSettingsGroupBox()
-{
-    settingsGroupBox = new QGroupBox(tr("Settings"));
-
-    QHBoxLayout *profileLayout = new QHBoxLayout;
-
-    settingsGroupBox->setLayout(profileLayout);
-}
-
 void Window::createActions()
 {
-    restoreAction = new QAction(tr("&Profile"), this);
-    connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
-
     quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
-void Window::createTrayIcon()
+void Window::createTrayMenu()
 {
     trayIconMenu = new QMenu(this);
-    trayIconMenu->addAction(restoreAction);
+}
+
+void Window::createTrayIcon()
+{
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
 

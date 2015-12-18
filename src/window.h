@@ -1,9 +1,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <string>
-#include <map>
-
 #include <QtGui/qsystemtrayicon.h>
 #include <QtGui/qdialog.h>
 #include <QtGui/qaction.h>
@@ -19,6 +16,7 @@
 #include <QtGui/qtextedit.h>
 #include <Qt/qstring.h>
 #include <Qt/qmap.h>
+#include <Qt/qvector.h>
 
 class QAction;
 class QCheckBox;
@@ -34,6 +32,11 @@ class QTextEdit;
 struct Profile {
     QString name;
     QMap<QString, QString> settings;
+
+    Profile()
+    {
+    }
+
     Profile(QString n) : name(n)
     {
     }
@@ -50,9 +53,7 @@ class Window : public QDialog
 
 public:
     Window();
-    virtual ~Window() {};
-
-    void setVisible(bool visible);
+    virtual ~Window();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -60,28 +61,22 @@ protected:
 private slots:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void setProfile(int index);
+    void actionSelected(QAction *action);
 
 private:
-    void loadProfiles();
-    void createProfileGroupBox();
-    void createSettingsGroupBox();
+    void clearProfileIcon();
+    void createProfiles();
     void createActions();
+    void createTrayMenu();
     void createTrayIcon();
 
-    QGroupBox *profileGroupBox;
-    QComboBox *profileComboBox;
-
-    QGroupBox *settingsGroupBox;
-
-    QAction *restoreAction;
+    QVector<QAction*> profileActions;
     QAction *quitAction;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
 
-    QString windowTitle;
-
-    std::vector<Profile> profiles;
+    QVector<Profile> profiles;
 };
 
 #endif
