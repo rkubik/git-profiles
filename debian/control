@@ -1,0 +1,14 @@
+Source: git-profiles
+Priority: optional
+Maintainer: Russ Kubik <russkubik@gmail.com>
+Build-Depends: debhelper (>= 8.0.0),
+               cmake,
+               libqt4-dev
+Standards-Version: 3.9.3
+Section: non-free/embedded
+
+Package: git-profiles
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Git Profile Manager
+ Use a simple ini config file and a system tray icon to manage your Git profiles
