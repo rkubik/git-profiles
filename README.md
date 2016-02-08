@@ -23,15 +23,15 @@ debuild -us -uc -b
 ## Configuration
 
 ```
-nano $HOME/.git-profiles
+vi $HOME/.git-profiles
 [myprofile1]
 user.name = My Name
 user.email = myname@example.com
-core.editor = nano
+core.editor = vi
 
 [myprofile2]
-user.name = Company Name
-user.email = companyname@example.com
+user.name = My Name 2
+user.email = myname2@example.com
 core.editor = vi
 ```
 
