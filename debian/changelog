@@ -1,3 +1,10 @@
+git-profiles (0.2.0) unstable; urgency=medium
+
+  * QT5 support as default
+  * QT4 backwards compatibility unstable/untested
+
+ -- Russ Kubik <russkubik@gmail.com>  Tue, 11 Oct 2016 17:18:46 -0600
+
 git-profiles (0.1.0) unstable; urgency=medium
 
   * Initial release

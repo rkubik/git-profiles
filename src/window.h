@@ -1,22 +1,44 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <QtGui/qsystemtrayicon.h>
-#include <QtGui/qdialog.h>
-#include <QtGui/qaction.h>
-#include <QtGui/qcheckbox.h>
-#include <QtGui/qcombobox.h>
-#include <QtGui/qgroupbox.h>
-#include <QtGui/qlabel.h>
-#include <QtGui/qlineedit.h>
-#include <QtGui/qmenu.h>
-#include <QtGui/qpushbutton.h>
-#include <QtGui/qspinbox.h>
-#include <QtGui/qtextedit.h>
-#include <QtGui/qtextedit.h>
-#include <Qt/qstring.h>
-#include <Qt/qmap.h>
-#include <Qt/qvector.h>
+#include "config.h"
+
+#if QT5
+#   include <QtWidgets/qsystemtrayicon.h>
+#   include <QtWidgets/qdialog.h>
+#   include <QtWidgets/qaction.h>
+#   include <QtWidgets/qcheckbox.h>
+#   include <QtWidgets/qcombobox.h>
+#   include <QtWidgets/qgroupbox.h>
+#   include <QtWidgets/qlabel.h>
+#   include <QtWidgets/qlineedit.h>
+#   include <QtWidgets/qmenu.h>
+#   include <QtWidgets/qpushbutton.h>
+#   include <QtWidgets/qspinbox.h>
+#   include <QtWidgets/qtextedit.h>
+#   include <QtWidgets/qtextedit.h>
+#   include <QtCore/qobjectdefs.h>
+#   include <QtCore/qstring.h>
+#   include <QtCore/qmap.h>
+#   include <QtCore/qvector.h>
+#elif QT4
+#   include <QtGui/qsystemtrayicon.h>
+#   include <QtGui/qdialog.h>
+#   include <QtGui/qaction.h>
+#   include <QtGui/qcheckbox.h>
+#   include <QtGui/qcombobox.h>
+#   include <QtGui/qgroupbox.h>
+#   include <QtGui/qlabel.h>
+#   include <QtGui/qlineedit.h>
+#   include <QtGui/qmenu.h>
+#   include <QtGui/qpushbutton.h>
+#   include <QtGui/qspinbox.h>
+#   include <QtGui/qtextedit.h>
+#   include <QtGui/qtextedit.h>
+#   include <Qt/qstring.h>
+#   include <Qt/qmap.h>
+#   include <Qt/qvector.h>
+#endif
 
 class QAction;
 class QCheckBox;

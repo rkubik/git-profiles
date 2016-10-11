@@ -1,13 +1,23 @@
-#include <QtGui/qapplication.h>
-#include <QtGui/qgridlayout.h>
-#include <QtGui/qmessagebox.h>
-#include <Qt/qevent.h>
-#include <Qt/qsettings.h>
-#include <Qt/qdir.h>
-#include <Qt/qdebug.h>
-#include <Qt/qprocess.h>
-
+#include "config.h"
 #include "window.h"
+
+#if QT5
+#   include <QtWidgets/qapplication.h>
+#   include <QtGui/qevent.h>
+#   include <QtCore/qsettings.h>
+#   include <QtCore/qdir.h>
+#   include <QtCore/qdebug.h>
+#   include <QtCore/qprocess.h>
+#elif QT4
+#   include <QtGui/qapplication.h>
+#   include <QtGui/qgridlayout.h>
+#   include <QtGui/qmessagebox.h>
+#   include <Qt/qevent.h>
+#   include <Qt/qsettings.h>
+#   include <Qt/qdir.h>
+#   include <Qt/qdebug.h>
+#   include <Qt/qprocess.h>
+#endif
 
 Window::Window()
 {
@@ -88,7 +98,7 @@ void Window::setProfile(int index)
     if (index < 0 || index >= profiles.size())
         return;
 
-    qDebug() << "Selecting profile: " << profiles[index].name;
+    qDebug() << "Selecting profile:" << profiles[index].name;
 
     QProcess process;
 
@@ -100,7 +110,7 @@ void Window::setProfile(int index)
             << profiles[index].settings[profileSetting]);
 
         if (!process.waitForFinished())
-            qDebug() << "Failed setting: " << profileSetting;
+            qDebug() << "Failed setting:" << profileSetting;
     }
 
     clearProfileIcon();

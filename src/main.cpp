@@ -1,7 +1,13 @@
-#include <QtGui/qapplication.h>
-#include <QtGui/qmessagebox.h>
-
+#include "config.h"
 #include "window.h"
+
+#if QT5
+#   include <QtWidgets/qapplication.h>
+#   include <QtWidgets/qmessagebox.h>
+#elif QT4
+#   include <QtGui/qapplication.h>
+#   include <QtGui/qmessagebox.h>
+#endif
 
 int main(int argc, char *argv[])
 {

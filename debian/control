@@ -2,8 +2,9 @@ Source: git-profiles
 Priority: optional
 Maintainer: Russ Kubik <russkubik@gmail.com>
 Build-Depends: debhelper (>= 8.0.0),
-               cmake,
-               libqt4-dev
+               cmake (>= 3.0.0),
+               libqt4-dev | qt5-default,
+               libqt4-dev | libqt5svg5-dev
 Standards-Version: 3.9.3
 Section: non-free/embedded
 
