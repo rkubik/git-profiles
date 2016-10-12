@@ -73,9 +73,6 @@ void Window::createProfiles()
 #if QT == 5
         action->setIcon(select_icon);
 #endif
-#if QT == 4
-        action->setData(icon);
-#endif
         action->setIconVisibleInMenu(false);
         action->setText(profileName);
         action->setData(profiles.size());
@@ -110,6 +107,9 @@ void Window::actionSelected(QAction *action)
 void Window::setProfile(int index)
 {
     QProcess process;
+#if QT == 4
+    QIcon select_icon(":/resources/icons/select.svg");
+#endif
 
     if (index < 0 || index >= profiles.size()) {
         return;
@@ -131,7 +131,7 @@ void Window::setProfile(int index)
 
     clearProfileIcon();
 #if QT == 4
-    profileActions[index]->setIcon(profileActions[index]->data());
+    profileActions[index]->setIcon(select_icon);
 #endif
     profileActions[index]->setIconVisibleInMenu(true);
     trayIcon->setToolTip(profiles[index].name);
