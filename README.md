@@ -6,8 +6,6 @@ System tray Git profile manager.
 
 ### Sources
 
-Latest Qt:
-
 ```
 mkdir build
 cd build
@@ -16,19 +14,7 @@ make
 make install
 ```
 
-Qt 4 (untested):
-
-```
-mkdir build
-cd build
-cmake -DQT4=ON ..
-make
-make install
-```
-
 ### Debian package
-
-Builds Qt 5 by default.
 
 ```
 debuild -us -uc -b
