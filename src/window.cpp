@@ -19,8 +19,6 @@
 #   include <Qt/qprocess.h>
 #endif
 
-static QIcon _select_icon;
-
 Window::Window()
 {
     createActions();
@@ -55,15 +53,15 @@ void Window::createProfiles()
 {
     const QString config = QDir::homePath() + QDir::separator() +
         ".git-profiles";
+    QIcon select_icon(":/resources/icons/select.svg");
 
     qDebug() << "Reading configuration from:" << config;
 
     QSettings settings(config, QSettings::IniFormat);
 
-    _select_icon = QIcon(":/resources/icons/select.svg");
-
     foreach (const QString &profileName, settings.childGroups()) {
         Profile profile(profileName);
+        QAction *action;
 
         settings.beginGroup(profileName);
         foreach (const QString &profileSetting, settings.childKeys()) {
@@ -71,11 +69,14 @@ void Window::createProfiles()
         }
         settings.endGroup();
 
-        QAction *action = new QAction(tr("&Quit"), this);
+        action = new QAction(tr("&Quit"), this);
 #if QT == 5
-        action->setIcon(_select_icon);
+        action->setIcon(select_icon);
 #endif
-	action->setIconVisibleInMenu(false);
+#if QT == 4
+        action->setData(icon);
+#endif
+        action->setIconVisibleInMenu(false);
         action->setText(profileName);
         action->setData(profiles.size());
 
@@ -130,7 +131,7 @@ void Window::setProfile(int index)
 
     clearProfileIcon();
 #if QT == 4
-    profileActions[index]->setIcon(_select_icon);
+    profileActions[index]->setIcon(profileActions[index]->data());
 #endif
     profileActions[index]->setIconVisibleInMenu(true);
     trayIcon->setToolTip(profiles[index].name);
