@@ -3,7 +3,7 @@
 
 #include "config.h"
 
-#if QT5
+#if QT == 5
 #   include <QtWidgets/qsystemtrayicon.h>
 #   include <QtWidgets/qdialog.h>
 #   include <QtWidgets/qaction.h>
@@ -21,7 +21,7 @@
 #   include <QtCore/qstring.h>
 #   include <QtCore/qmap.h>
 #   include <QtCore/qvector.h>
-#elif QT4
+#elif QT == 4
 #   include <QtGui/qsystemtrayicon.h>
 #   include <QtGui/qdialog.h>
 #   include <QtGui/qaction.h>

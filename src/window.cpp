@@ -1,14 +1,14 @@
 #include "config.h"
 #include "window.h"
 
-#if QT5
+#if QT == 5
 #   include <QtWidgets/qapplication.h>
 #   include <QtGui/qevent.h>
 #   include <QtCore/qsettings.h>
 #   include <QtCore/qdir.h>
 #   include <QtCore/qdebug.h>
 #   include <QtCore/qprocess.h>
-#elif QT4
+#elif QT == 4
 #   include <QtGui/qapplication.h>
 #   include <QtGui/qgridlayout.h>
 #   include <QtGui/qmessagebox.h>
@@ -18,6 +18,8 @@
 #   include <Qt/qdebug.h>
 #   include <Qt/qprocess.h>
 #endif
+
+static QIcon _select_icon;
 
 Window::Window()
 {
@@ -54,10 +56,11 @@ void Window::createProfiles()
     const QString config = QDir::homePath() + QDir::separator() +
         ".git-profiles";
 
-    qDebug() << "Reading configuration from: " << config;
+    qDebug() << "Reading configuration from:" << config;
 
     QSettings settings(config, QSettings::IniFormat);
-    QIcon icon(":/resources/icons/select.svg");
+
+    _select_icon = QIcon(":/resources/icons/select.svg");
 
     foreach (const QString &profileName, settings.childGroups()) {
         Profile profile(profileName);
@@ -69,7 +72,10 @@ void Window::createProfiles()
         settings.endGroup();
 
         QAction *action = new QAction(tr("&Quit"), this);
-        action->setIcon(icon);
+#if QT == 5
+        action->setIcon(_select_icon);
+#endif
+	action->setIconVisibleInMenu(false);
         action->setText(profileName);
         action->setData(profiles.size());
 
@@ -77,30 +83,38 @@ void Window::createProfiles()
         profiles.push_back(profile);
         profileActions.push_back(action);
     }
+
+    qDebug() << "Loaded" << profiles.size() << "profiles";
 }
 
 void Window::clearProfileIcon()
 {
-    foreach (QAction *profileAction, profileActions)
+    foreach (QAction *profileAction, profileActions) {
+#if QT == 4
+        profileAction->setIcon(QIcon());
+#endif
         profileAction->setIconVisibleInMenu(false);
+    }
 }
 
 void Window::actionSelected(QAction *action)
 {
-    if (action->data().isNull())
+    if (action->data().isNull()) {
         return;
+    }
 
     setProfile(action->data().toInt());
 }
 
 void Window::setProfile(int index)
 {
-    if (index < 0 || index >= profiles.size())
-        return;
-
-    qDebug() << "Selecting profile:" << profiles[index].name;
-
     QProcess process;
+
+    if (index < 0 || index >= profiles.size()) {
+        return;
+    }
+
+    qDebug() << "Selecting profile" << index << profiles[index].name;
 
     foreach (const QString &profileSetting, profiles[index].settings.keys()) {
         process.start("git", QStringList()
@@ -109,11 +123,15 @@ void Window::setProfile(int index)
             << profileSetting
             << profiles[index].settings[profileSetting]);
 
-        if (!process.waitForFinished())
+        if (!process.waitForFinished()) {
             qDebug() << "Failed setting:" << profileSetting;
+        }
     }
 
     clearProfileIcon();
+#if QT == 4
+    profileActions[index]->setIcon(_select_icon);
+#endif
     profileActions[index]->setIconVisibleInMenu(true);
     trayIcon->setToolTip(profiles[index].name);
 }

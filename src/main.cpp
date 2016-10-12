@@ -1,10 +1,10 @@
 #include "config.h"
 #include "window.h"
 
-#if QT5
+#if QT >= 5
 #   include <QtWidgets/qapplication.h>
 #   include <QtWidgets/qmessagebox.h>
-#elif QT4
+#else
 #   include <QtGui/qapplication.h>
 #   include <QtGui/qmessagebox.h>
 #endif

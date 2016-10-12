@@ -1,11 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define ON 1
-#define OFF 0
-
-#define QT5 @QT5@
-#define QT4 @QT4@
+#define QT @QT@
 
 #endif
 
