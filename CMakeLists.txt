@@ -6,7 +6,7 @@ set( CMAKE_INSTALL_PREFIX "/" )
 
 set( PACKAGE_MAJOR 0 )
 set( PACKAGE_MINOR 2 )
-set( PACKAGE_PATCH 1 )
+set( PACKAGE_PATCH 2 )
 
 message( "MAJOR: ${PACKAGE_MAJOR}" )
 message( "MINOR: ${PACKAGE_MINOR}" )

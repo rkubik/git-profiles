@@ -1,13 +1,8 @@
 #include "config.h"
 #include "window.h"
 
-#if QT >= 5
-#   include <QtWidgets/qapplication.h>
-#   include <QtWidgets/qmessagebox.h>
-#else
-#   include <QtGui/qapplication.h>
-#   include <QtGui/qmessagebox.h>
-#endif
+#include <QtWidgets>
+#include <QtGui>
 
 int main(int argc, char *argv[])
 {

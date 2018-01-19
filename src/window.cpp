@@ -1,23 +1,9 @@
 #include "config.h"
 #include "window.h"
 
-#if QT == 5
-#   include <QtWidgets/qapplication.h>
-#   include <QtGui/qevent.h>
-#   include <QtCore/qsettings.h>
-#   include <QtCore/qdir.h>
-#   include <QtCore/qdebug.h>
-#   include <QtCore/qprocess.h>
-#elif QT == 4
-#   include <QtGui/qapplication.h>
-#   include <QtGui/qgridlayout.h>
-#   include <QtGui/qmessagebox.h>
-#   include <Qt/qevent.h>
-#   include <Qt/qsettings.h>
-#   include <Qt/qdir.h>
-#   include <Qt/qdebug.h>
-#   include <Qt/qprocess.h>
-#endif
+#include <QtWidgets>
+#include <QtGui>
+#include <QtCore>
 
 Window::Window()
 {
@@ -70,9 +56,7 @@ void Window::createProfiles()
         settings.endGroup();
 
         action = new QAction(tr("&Quit"), this);
-#if QT == 5
         action->setIcon(select_icon);
-#endif
         action->setIconVisibleInMenu(false);
         action->setText(profileName);
         action->setData(profiles.size());
@@ -88,9 +72,6 @@ void Window::createProfiles()
 void Window::clearProfileIcon()
 {
     foreach (QAction *profileAction, profileActions) {
-#if QT == 4
-        profileAction->setIcon(QIcon());
-#endif
         profileAction->setIconVisibleInMenu(false);
     }
 }
@@ -107,9 +88,6 @@ void Window::actionSelected(QAction *action)
 void Window::setProfile(int index)
 {
     QProcess process;
-#if QT == 4
-    QIcon select_icon(":/resources/icons/select.svg");
-#endif
 
     if (index < 0 || index >= profiles.size()) {
         return;
@@ -130,9 +108,6 @@ void Window::setProfile(int index)
     }
 
     clearProfileIcon();
-#if QT == 4
-    profileActions[index]->setIcon(select_icon);
-#endif
     profileActions[index]->setIconVisibleInMenu(true);
     trayIcon->setToolTip(profiles[index].name);
 }

@@ -1,6 +1,6 @@
 # git-profiles
 
-System tray Git profile manager.
+QT5 system tray Git profile manager.
 
 ## Installation
 
@@ -40,10 +40,6 @@ core.editor = vi
 `git-profiles`
 
 <img src="usage.png">
-
-## Known Issues
-
-- System tray icon is invisible (this is a known issue in Qt 5)
 
 ## TODO
 
